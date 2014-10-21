@@ -1,10 +1,8 @@
 mod cards;
 
 fn main() {
-    let card = &cards::Card::new(2, 2);
-    cards::print_card(card);
-    let card = &cards::Card::new(13, 4);
-    cards::print_card(card);
-    let card = &cards::Card::new(1, 2);
-    cards::print_card(card);
+    println!("{}", &cards::Card::new(8, 2));
+    println!("{}", &cards::Card::new(14, 3));
+    println!("{}", &cards::Card::new(1, 2));
+    println!("{}", &cards::Card::new(14, 4));
 }
