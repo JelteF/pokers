@@ -1,12 +1,12 @@
 use cards::Card;
 
 // All these functions need sorted vectors of Cards
-pub fn has_pair<'r>(card_vec: &'r Vec<&Card>) -> Option<&'r Card> {
+pub fn has_pair<'r>(card_vec: &Vec<&'r Card>) -> Option<&'r Card> {
     has_set(2, card_vec)
 }
 
-fn has_set<'r>(set_size: u8, card_vec: &'r Vec<&Card>) -> Option<&'r Card> {
-    let mut prev: &&Card = match card_vec.last() {
+fn has_set<'r>(set_size: u8, card_vec: &Vec<&'r Card>) -> Option<&'r Card> {
+    let mut prev = match card_vec.last() {
         Some(x) => x,
         None => return None
     };
@@ -26,3 +26,25 @@ fn has_set<'r>(set_size: u8, card_vec: &'r Vec<&Card>) -> Option<&'r Card> {
     None
 }
 
+fn has_sets<'r>(set_size1: u8, set_size2: u8,
+                card_vec: &Vec<&'r Card>) -> Option<(&'r Card, &'r Card)> {
+    let largest = match has_set(set_size1, card_vec) {
+        Some(x) => x,
+        None => return None
+    };
+    // Remove the previous set from the set of cards
+    let card_vec_rest: &Vec<&'r Card> = &card_vec.clone().into_iter()
+        .filter(|&card| card != largest)
+        .collect();
+    // Search for the second set
+    let smallest = match has_set(set_size2, card_vec_rest) {
+        Some(x) => x,
+        None => return None
+    };
+    Some((largest, smallest))
+}
+
+pub fn has_two_pair<'r>(
+        card_vec: &Vec<&'r Card>) -> Option<(&'r Card, &'r Card)> {
+    has_sets(2, 2, card_vec)
+}

@@ -12,6 +12,7 @@ fn main() {
     let two = &Card::new(8, 3);
     let twotwo = &Card::new(8, 2);
     let three = &Card::new(14, 1);
+    let threethree = &Card::new(14, 2);
     println!("{}", one > two);
     println!("{}", two > one);
     println!("{}", one.get_number());
@@ -20,10 +21,12 @@ fn main() {
     println!("{}", card_vec);
     card_vec.sort();
     println!("{}", card_vec);
-    card_vec.reverse();
     println!("{}", combos::has_pair(&card_vec));
-    card_vec = vec![two, one, three];
-    card_vec.sort();
-    card_vec.reverse();
+    println!("{}", combos::has_two_pair(&card_vec));
+    card_vec = vec![one, two, three];
     println!("{}", combos::has_pair(&card_vec));
+    card_vec = vec![one, twotwo, two, three, threethree];
+    println!("{}", combos::has_pair(&card_vec));
+    println!("{}", combos::has_two_pair(&card_vec));
+
 }
