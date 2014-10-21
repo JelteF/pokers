@@ -1,23 +1,28 @@
 use cards::Card;
 
-// All these functions need reverse sorted vectors of Cards
-pub fn has_pair(card_vec: &Vec<&Card>) -> bool {
+// All these functions need sorted vectors of Cards
+pub fn has_pair<'r>(card_vec: &'r Vec<&Card>) -> Option<&'r Card> {
     has_set(2, card_vec)
 }
 
-fn has_set(set_size: u8, card_vec: &Vec<&Card>) -> bool {
-    let mut prev: &Card = card_vec[0];
+fn has_set<'r>(set_size: u8, card_vec: &'r Vec<&Card>) -> Option<&'r Card> {
+    let mut prev: &&Card = match card_vec.last() {
+        Some(x) => x,
+        None => return None
+    };
+
     let mut count: u8 = 1;
-    for card in card_vec.iter().skip(1) {
-        if *card == prev {
+    for card in card_vec.iter().rev().skip(1) {
+        if card == prev {
             count += 1;
             if count == set_size {
-                return true
+                return Some(*prev)
             }
             continue;
         }
-        prev = *card;
+        prev = card;
         count = 1;
     }
-    false
+    None
 }
+
