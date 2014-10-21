@@ -6,11 +6,38 @@ pub struct Card {
 }
 
 impl Card {
+    // Constructor
     pub fn new (number: u8, suit: u8) -> Card {
         Card {suit:suit, number:number}
     }
+
+    // Getters
+    pub fn get_number(&self) -> u8 { self.number }
+    pub fn get_suit(&self) -> u8 { self.suit }
 }
 
+// Define ordering, suits don't matter for ordering in poker
+impl PartialEq for Card {
+    fn eq(&self, other: &Card) -> bool {
+        self.number.eq(&other.number)
+    }
+}
+
+impl Eq for Card { }
+
+impl PartialOrd for Card {
+    fn partial_cmp(&self, other: &Card) -> Option<Ordering> {
+        self.number.partial_cmp(&other.number)
+    }
+}
+
+impl Ord for Card {
+    fn cmp(&self, other: &Card) -> Ordering{
+        self.number.cmp(&other.number)
+    }
+}
+
+// Format a card as a readable string
 impl fmt::Show for Card {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result{
         let suit_str = match self.suit {
