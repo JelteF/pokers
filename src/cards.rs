@@ -1,19 +1,52 @@
 use std::fmt;
 
+#[deriving(Clone)]
 pub struct Card {
     number: u8,
     suit: u8,
 }
 
+struct BasicCardIterator<'a> {
+    pub main_iterator: &'a mut Iterator<(u8, u8)> +'a,
+}
+
 impl Card {
     // Constructor
     pub fn new (number: u8, suit: u8) -> Card {
-        Card {suit:suit, number:number}
+        Card {number:number, suit:suit}
+    }
+
+    // Returns a vector with Cards
+    pub fn new_card_vec(nums: &[(u8, u8)]) -> Vec<Card>{
+        let mut vector = vec![];
+        for card in BasicCardIterator::new(&mut nums.iter().map(|&x| x)) {
+            vector.push(card);
+        }
+        vector
     }
 
     // Getters
     pub fn get_number(&self) -> u8 { self.number }
     pub fn get_suit(&self) -> u8 { self.suit }
+
+
+}
+
+impl<'a> Iterator<Card> for BasicCardIterator<'a> {
+    fn next(&mut self) -> Option<Card> {
+        let (number, suit) = match self.main_iterator.next() {
+            Some(x) => x,
+            None => return None
+        };
+        Some(Card::new(number, suit))
+    }
+}
+
+// Constructors
+impl<'a> BasicCardIterator<'a> {
+    fn new<T: Iterator<(u8, u8)>>(main_iterator: &'a mut T) -> BasicCardIterator {
+        BasicCardIterator {main_iterator: main_iterator}
+    }
 }
 
 // Define ordering, suits don't matter for ordering in poker
