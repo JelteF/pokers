@@ -61,3 +61,34 @@ fn has_sets(set_size1: u8, set_size2: u8,
     };
     Some((largest, smallest))
 }
+
+
+pub fn has_straight(card_vec: &Vec<Card>) -> Option<Card> {
+    let mut new_card_vec = card_vec.clone();
+    // Only keep one card of each number, this makes looping easier
+    new_card_vec.dedup();
+
+    let mut prev = match card_vec.last() {
+        Some(x) => x,
+        None => return None
+    };
+
+    // Make the straight A2345 possible
+    if prev.get_number() == 14 {
+        new_card_vec.insert(0, Card::new(1, 0))
+    }
+
+    let mut count = 1;
+    for card in new_card_vec.iter().rev().skip(1) {
+        if prev.get_number() - count == card.get_number() {
+            count += 1;
+            if count == 5 {
+                return Some(*prev)
+            }
+            continue
+        }
+        prev = card;
+        count = 1;
+    }
+    None
+}
